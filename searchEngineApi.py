@@ -27,6 +27,6 @@ def index():
 def query_db():
     return {"Messasge": "I'm querying"}
 
-@app.get("/ingest")
+@app.post("/ingest")
 def ingest_page():
     return {"Message": "I'm ingesting ..."}
