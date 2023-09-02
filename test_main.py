@@ -14,5 +14,4 @@ def test_query():
 def test_ingest():
     response = client.post("/ingest")
     assert response.status_code == 200
-    print(response.json())
     assert response.json() == {"Message": "I'm ingesting ..."}
