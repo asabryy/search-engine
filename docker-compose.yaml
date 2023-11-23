@@ -41,6 +41,14 @@ services:
       - grafana-storage:/var/lib/grafana
     networks:
       - kafka-net
+  myenv:
+    build: .
+    container_name: myenv
+    ports:
+      - '6969:6969'
+    networks:
+      - kafka-net
+    command: tail -F anything
 volumes:
   grafana-storage: {}
 networks:
