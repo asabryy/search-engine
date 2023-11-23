@@ -6,4 +6,4 @@ ADD consumer.py .
 
 RUN pip install -r requirements.txt
 
-EXPOSE 6969
+CMD ["uvicorn","searchEngineApi:app", "--reload", "--host", "0.0.0.0"]

@@ -45,10 +45,9 @@ services:
     build: .
     container_name: myenv
     ports:
-      - '6969:6969'
+      - '8000:8000'
     networks:
       - kafka-net
-    command: tail -F anything
 volumes:
   grafana-storage: {}
 networks:

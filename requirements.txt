@@ -1,3 +1,4 @@
 fastapi==0.104.1
 kafka_python==2.0.2
 pydantic==2.5.2
+uvicorn

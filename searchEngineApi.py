@@ -1,9 +1,10 @@
 from fastapi import FastAPI, Path
 from pydantic import BaseModel
 from kafka import KafkaProducer
+import json
 
 app = FastAPI()
-producer = KafkaProducer(bootstrap_servers='kafka:9092')
+producer = KafkaProducer(bootstrap_servers=['kafka:9092'], api_version=(1, 1, 0))
 
 
 pages = {
@@ -15,14 +16,9 @@ pages = {
     }
 }
 
-producer.send('baeldung', b'(1, Main Menu), (2, Phone) , (3, Smart Phone), (4, iPhone)')
 
-
-class Page(BaseModel):
-    name: str
-    page_url: str
-    text_body: str
-    size: int
+class Document(BaseModel):
+    documnet: str
 
 
 @app.get("/")
@@ -34,5 +30,8 @@ def query_db():
     return {"Messasge": "I'm querying"}
 
 @app.post("/ingest")
-def ingest_page():
+def ingest_document(document: Document):
+    print(f"Received document is: {document}")
+    producer.send('baeldung', value=json.dumps(document).encode('utf-8'))
+    producer.flush()
     return {"Message": "I'm ingesting ..."}
