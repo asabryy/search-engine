@@ -40,6 +40,7 @@ def ingest_document(document: Document):
     producer.flush()
     return {"Message": "I'm ingesting ..."}
 
+@app.get("/consume")
 def consume():
     for msg in consumer:
         print(f'Consumed Message: {msg.value}')
