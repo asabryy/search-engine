@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Path
 from pydantic import BaseModel
-from kafka import KafkaProducer
+from kafka import KafkaProducer, KafkaConsumer
 import json
 
 app = FastAPI()
 producer = KafkaProducer(bootstrap_servers=['kafka:9092'], api_version=(1, 1, 0))
-
+consumer = KafkaConsumer('baeldung', bootstrap_servers=['kafka:9092'],api_version=(1, 1, 0))
 
 pages = {
     1: {
@@ -18,7 +18,11 @@ pages = {
 
 
 class Document(BaseModel):
-    documnet: str
+    document: str
+   
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
 
 
 @app.get("/")
@@ -32,6 +36,10 @@ def query_db():
 @app.post("/ingest")
 def ingest_document(document: Document):
     print(f"Received document is: {document}")
-    producer.send('baeldung', value=json.dumps(document).encode('utf-8'))
+    producer.send('baeldung', value=document.toJSON().encode('utf-8'))
     producer.flush()
     return {"Message": "I'm ingesting ..."}
+
+def consume():
+    for msg in consumer:
+        print(f'Consumed Message: {msg.value}')
